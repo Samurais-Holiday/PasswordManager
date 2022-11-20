@@ -22,19 +22,22 @@ class LocalStoragePasswordRepository implements PasswordRepository {
   /// 前の文字が「&」以外 or「&&」* 1以上の「/」に一致する正規表現
   static final RegExp _splitPattern
       = RegExp(r'(?<=[^' + _escapeChar + r'](' + (_escapeChar * 2) + r')*)' + _splitChar);
-  /// エスケープが必要な文字に一致する正規表現
-  static final RegExp _requiredEscapeChar
-      = RegExp(r'([' + _escapeChar + r'|' + _splitChar + r'|' + _emptyChar + r'])');
   /// ストレージへの操作を行うインスタンス
   late LocalStorage _storage;
 
   /// エスケープする
-  static String _escape(final String src)
-      => src.replaceAllMapped(_requiredEscapeChar, (match) => _escapeChar + match[0]!);
+  static String _escape(final String src) {
+    final escapedEscapeText = src.replaceAll(_escapeChar, _escapeChar * 2);
+    return escapedEscapeText.replaceAll(_splitChar, _escapeChar + _splitChar)
+        .replaceAll(_emptyChar, _escapeChar + _emptyChar);
+  }
 
   /// エスケープを元に戻す
-  static String _unescape(final String src)
-      => src.replaceAllMapped(_escapeChar + _requiredEscapeChar.pattern, (match) => match[0]!);
+  static String _unescape(final String src) {
+    final escapedEscapeText = src.replaceAll(_escapeChar + _splitChar, _splitChar)
+        .replaceAll(_escapeChar + _emptyChar, _emptyChar);
+    return escapedEscapeText.replaceAll(_escapeChar * 2, _escapeChar);
+  }
 
   /// コンストラクタ
   /// 単体テスト可能にするため、ストレージ操作を行うクラスはDI可能とする
