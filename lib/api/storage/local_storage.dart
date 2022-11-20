@@ -7,6 +7,10 @@ class LocalStorage {
   /// 全データ取得
   Future<Map<String, String>> readAll() => _storage.readAll();
 
+  /// データ取得
+  /// 存在しない場合はnullを返却する
+  Future<String?> read({required final String title}) => _storage.read(key: title);
+
   /// 書き込み
   /// keyが既に存在する場合は上書きする
   Future write({required final String key, required final String value})

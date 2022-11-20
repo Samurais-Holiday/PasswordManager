@@ -9,6 +9,6 @@ class LocalAuthentication {
     if (!await auth.isDeviceSupported()) {
       return true;
     }
-    return auth.authenticate(localizedReason: 'いつもの方法でロックを解除してください');
+    return auth.authenticate(localizedReason: 'Please authenticate to show your passwords.');
   }
 }

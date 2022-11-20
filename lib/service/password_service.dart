@@ -12,27 +12,35 @@ class PasswordService {
   }
 
   /// パスワード情報のリストを取得する
-  Future<List<PasswordInfo>> find([final String searchWord = '']) async {
+  Future<List<PasswordInfo>> findAll() => _repository.findAll();
+
+  /// 検索ワードにヒットしたパスワード情報のリストを取得する
+  Future<List<PasswordInfo>> search(String searchWord) async {
+    final List<PasswordInfo> all = await findAll();
     if (searchWord.isEmpty) {
-      return _repository.findAll();
+      return all;
     }
-    final List<PasswordInfo> returnPasswords = [];
-    final List<PasswordInfo> all = await _repository.findAll();
+    List<PasswordInfo> returnPasswords = [];
     for (var password in all) {
-      if (password.contains(searchWord)) {
+      if (password.hits(searchWord)) {
         returnPasswords.add(password);
       }
     }
     return returnPasswords;
   }
 
+  /// 既にデータが存在するか
+  Future<bool> contains({required String title}) async
+      => await _repository.find(title: title) != null;
+
   ///　パスワードを追加する
-  void add(PasswordInfo password) => _repository.add(password);
+  /// 既に存在する場合は上書きする
+  Future add(PasswordInfo password) => _repository.add(password);
 
   /// パスワードを更新する
-  void update({required final String oldTitle, required final PasswordInfo newPassword})
+  Future update({required final String oldTitle, required final PasswordInfo newPassword})
       => _repository.update(oldTitle: oldTitle, newPassword: newPassword);
 
   /// パスワードを削除する
-  void delete(final String title) => _repository.delete(title);
+  Future delete(final String title) => _repository.delete(title: title);
 }

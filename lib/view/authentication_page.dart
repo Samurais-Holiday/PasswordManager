@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:password_manager/common/authentication/local_authentication.dart';
+import 'package:password_manager/view/widget/authentication_navigator.dart';
 
 /// ユーザ認証を行うページ
 class AuthenticationPage extends StatefulWidget {
   const AuthenticationPage({Key? key, required this.title, required this.nextPage}) : super(key: key);
-
-  final String title;    ///< ヘッダータイトル
-  final Widget nextPage; ///< 認証完了後の遷移先ページ
+  /// ヘッダータイトル
+  final String title;
+  /// 認証完了後の遷移先ページ
+  final Widget nextPage;
 
   @override
   State<AuthenticationPage> createState() => _AuthenticationPageState();
@@ -17,7 +18,11 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   @override
   void initState() {
     super.initState();
-    _authenticateAndNavigatePage();
+    AuthenticationNavigator.pushReplacement(
+        context: context,
+        successPage: widget.nextPage,
+        failurePage: AuthenticationPage(title: 'Authentication', nextPage: widget.nextPage)
+    );
   }
 
   @override
@@ -27,22 +32,8 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         title: Text(widget.title),
       ),
       body: const Center(
-          child: Text('認証中です…')
+          child: Text('Authenticating...')
       ),
     );
-  }
-
-  /// 認証結果に応じて次のページへ遷移する
-  Future<void> _authenticateAndNavigatePage() async {
-    if (await LocalAuthentication.authenticate()) {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => widget.nextPage));
-    } else {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_)
-              => AuthenticationPage(title: widget.title, nextPage: widget.nextPage)
-          )
-      );
-    }
   }
 }

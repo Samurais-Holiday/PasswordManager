@@ -5,15 +5,15 @@ import 'package:password_manager/view/widget/password_widget.dart';
 /// パスワード一覧を表示するページ
 class PasswordListPage extends StatefulWidget {
   const PasswordListPage({Key? key, required this.title}) : super(key: key);
-
-  final String title; ///< ヘッダータイトル
+  /// ヘッダータイトル
+  final String title;
 
   @override
   State<PasswordListPage> createState() => _PasswordListPageState();
 }
 
 class _PasswordListPageState extends State<PasswordListPage> {
-  final TextEditingController _searchFormController = TextEditingController(); ///< 検索フォームコントローラー
+  final TextEditingController _searchFormController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +28,15 @@ class _PasswordListPageState extends State<PasswordListPage> {
               controller: _searchFormController,
               onChanged: (_) => setState(() {})
           ),
-          PasswordWidget.getList(
-            context: context,
-            searchWord: _searchFormController.value.text,
+          SingleChildScrollView(
+            child: PasswordWidget.listView(
+              context: context,
+              searchWord: _searchFormController.value.text,
+            ),
           ),
         ],
       ),
-      floatingActionButton: Forms.addPasswordInfoButton(),
+      floatingActionButton: PasswordWidget.addPasswordInfoButton(context: context),
     );
   }
 }

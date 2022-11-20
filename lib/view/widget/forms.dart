@@ -14,15 +14,60 @@ class Forms {
     );
   }
 
+  /// パスワード情報入力フォーム
+  static Widget passwordFormField({required TextEditingController titleController, required TextEditingController idController,
+                                   required TextEditingController passwordController, required TextEditingController memoController}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // Title
+        TextFormField(
+          autofocus: true,
+          controller: titleController,
+          decoration: const InputDecoration(
+            labelText: 'Title *',
+          ),
+          validator: (input) {
+            return input == null || input.isEmpty
+                ? '`Title` is required.'
+                : null;
+          },
+        ),
 
-  /// パスワード情報追加ボタン
-  static Widget addPasswordInfoButton() {
-    return FloatingActionButton.extended(
-      label: const Text('追加'),
-      onPressed: () {
-        // TODO: 追加ページへ遷移
-      },
+        // Login ID
+        TextFormField(
+          controller: idController,
+          decoration: const InputDecoration(
+            labelText: 'Login ID *',
+          ),
+          validator: (input) {
+            return input == null || input.isEmpty
+                ? '`Login ID` is required.'
+                : null;
+          },
+        ),
+
+        // Password
+        TextFormField(
+          controller: passwordController,
+          decoration: const InputDecoration(
+            labelText: 'Password *',
+          ),
+          validator: (input) {
+            return input == null || input.isEmpty
+                ? '`Password` is required.'
+                : null;
+          },
+        ),
+
+        // memo
+        TextFormField(
+          controller: memoController,
+          decoration: const InputDecoration(
+            labelText: 'Memo',
+          ),
+        ),
+      ],
     );
   }
-
 }

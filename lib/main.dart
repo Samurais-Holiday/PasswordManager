@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      home: const AuthenticationPage(title: '認証', nextPage: PasswordListPage(title: 'パスワード一覧')),
+      home: const AuthenticationPage(title: 'Authenticate', nextPage: PasswordListPage(title: 'List')),
     );
   }
 }
