@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:password_manager/api/logger/logger.dart';
 import 'package:password_manager/model/password_info.dart';
 import 'package:password_manager/service/password_service.dart';
@@ -8,6 +7,7 @@ import 'package:password_manager/view/edit_password_page.dart';
 import 'package:password_manager/view/password_list_page.dart';
 import 'package:password_manager/view/view_password_page.dart';
 import 'package:password_manager/view/widget/dialogs.dart';
+import 'package:password_manager/view/widget/forms.dart';
 
 /// パスワードに対する操作種別
 enum _Action {
@@ -105,56 +105,14 @@ class PasswordWidget {
   }
 
   /// 指定したパスワード情報を表示するWidgetを返却する
-  static Widget view({required BuildContext context, required final PasswordInfo password}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        // title
-        Text(password.title, style: Theme.of(context).textTheme.displaySmall),
-        // id
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Id:', style: Theme.of(context).textTheme.titleLarge),
-            SelectableText(password.id, style: Theme.of(context).textTheme.titleLarge,),
-            ElevatedButton(
-                child: const Text('copy'),
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: password.id));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Copied!'))
-                  );
-                },
-            )
-          ],
-        ),
-        // password
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Password:', style: Theme.of(context).textTheme.titleLarge),
-            SelectableText(password.password, style: Theme.of(context).textTheme.titleLarge,),
-            ElevatedButton(
-                child: const Text('Copy'),
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: password.password));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Copied!'))
-                  );
-                },
-            ),
-          ],
-        ),
-        // memo
-        Row(
-          children: [
-            Text('memo:', style: Theme.of(context).textTheme.titleLarge,),
-            SelectableText(password.memo, style: Theme.of(context).textTheme.titleLarge,),
-          ],
-        )
-      ],
-    );
-  }
+  static Widget view({required BuildContext context, required final PasswordInfo password})
+    => Forms.passwordFormField(
+        context: context,
+        readOnly: true,
+        titleController: TextEditingController(text: password.title),
+        idController: TextEditingController(text: password.id),
+        passwordController: TextEditingController(text: password.password),
+        memoController: TextEditingController(text: password.memo));
 
   /// パスワードに関する操作を提供するドロップダウンボタン
   static Widget moreActionButton({required BuildContext context, required final PasswordInfo password}) {

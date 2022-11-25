@@ -32,7 +32,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
         title: Text(widget.title),
       ),
       body: const Center(
-          child: Text('Authenticating...')
+          child: CircularProgressIndicator()
       ),
     );
   }

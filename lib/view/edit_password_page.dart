@@ -50,6 +50,7 @@ class EditPasswordPageState extends State<EditPasswordPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Forms.passwordFormField(
+                context: context,
                 key: _formKey,
                 titleController: _titleController,
                 idController: _idController,
