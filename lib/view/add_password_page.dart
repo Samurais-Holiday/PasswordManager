@@ -17,7 +17,7 @@ class AddPasswordPage extends StatefulWidget {
 
 class AddPasswordPageState extends State<AddPasswordPage> {
   final PasswordService _service = PasswordService();
-
+  final _formKey = GlobalKey<FormState>();
   /// Controllers
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _idController = TextEditingController();
@@ -35,6 +35,7 @@ class AddPasswordPageState extends State<AddPasswordPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Forms.passwordFormField(
+                key: _formKey,
                 titleController: _titleController,
                 idController: _idController,
                 passwordController: _passwordController,
@@ -68,6 +69,9 @@ class AddPasswordPageState extends State<AddPasswordPage> {
     return ElevatedButton(
       child: const Text('OK'),
       onPressed: () async {
+        if (!_formKey.currentState!.validate()) {
+          return;
+        }
         final PasswordInfo newPassword = PasswordInfo(
             title: _titleController.value.text,
             id: _idController.value.text,
