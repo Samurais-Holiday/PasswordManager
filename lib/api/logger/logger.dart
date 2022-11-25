@@ -16,6 +16,7 @@ class Logger {
 
   /// ヘッダー作成
   static String _createHeader() {
+
     return ''; // TODO: 必要に応じて作成する
   }
 }

@@ -23,6 +23,7 @@ class Forms {
         // Title
         TextFormField(
           autofocus: true,
+          textInputAction: TextInputAction.next,
           controller: titleController,
           decoration: const InputDecoration(
             labelText: 'Title *',
@@ -37,6 +38,7 @@ class Forms {
         // Login ID
         TextFormField(
           controller: idController,
+          textInputAction: TextInputAction.next,
           decoration: const InputDecoration(
             labelText: 'Login ID *',
           ),
@@ -50,6 +52,7 @@ class Forms {
         // Password
         TextFormField(
           controller: passwordController,
+          textInputAction: TextInputAction.next,
           decoration: const InputDecoration(
             labelText: 'Password *',
           ),
@@ -63,6 +66,7 @@ class Forms {
         // memo
         TextFormField(
           controller: memoController,
+          textInputAction: TextInputAction.done,
           decoration: const InputDecoration(
             labelText: 'Memo',
           ),

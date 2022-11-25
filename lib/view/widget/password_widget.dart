@@ -18,43 +18,52 @@ enum _Action {
 
 /// パスワード一覧を表示するWidgetを返却するクラス
 class PasswordWidget {
+  static Future<List<PasswordInfo>> _passwords = PasswordService().findAll();
+
   /// パスワード一覧を表示するWidgetを返却
   static Widget listView({required BuildContext context, final String searchWord = ''}) {
-    PasswordService().search(searchWord).then((passwords) {
-      // 読み込み完了後の表示
-      return ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return Card(
-              child: ListTile(
-                  title: Text(passwords[index].title),
-                  subtitle: Text(passwords[index].memo),
-                  trailing: PopupMenuButton<_Action>(
-                    icon: const Icon(Icons.more_horiz),
-                    onSelected: (action) => _action(context: context, action: action, password: passwords[index]),
-                    itemBuilder: (BuildContext _) => [
-                      const PopupMenuItem(
-                        value: _Action.view,
-                        child: Text('表示'),
-                      ),
-                      const PopupMenuItem(
-                        value: _Action.edit,
-                        child: Text('編集'),
-                      ),
-                      const PopupMenuItem(
-                        value: _Action.delete,
-                        child: Text('削除'),
-                      )
-                    ],
-                  ),
-                  onTap: () => _action(context: context, action: _Action.view, password: passwords[index])
-              ),
+    _passwords = PasswordService().search(searchWord);
+    return FutureBuilder(
+        future: _passwords,
+        builder: (BuildContext context, AsyncSnapshot<List<PasswordInfo>> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data!.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                    child: ListTile(
+                        title: Text(snapshot.data![index].title),
+                        subtitle: Text(snapshot.data![index].memo),
+                        trailing: PopupMenuButton<_Action>(
+                          icon: const Icon(Icons.more_horiz),
+                          onSelected: (action) => _action(context: context, action: action, password: snapshot.data![index]),
+                          itemBuilder: (BuildContext _) => [
+                            const PopupMenuItem(
+                              value: _Action.view,
+                              child: Text('View'),
+                            ),
+                            const PopupMenuItem(
+                              value: _Action.edit,
+                              child: Text('Edit'),
+                            ),
+                            const PopupMenuItem(
+                              value: _Action.delete,
+                              child: Text('Delete'),
+                            )
+                          ],
+                        ),
+                        onTap: () => _action(context: context, action: _Action.view, password: snapshot.data![index])
+                    ),
+                  );
+                }
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
           }
-      );
-    });
-    // 読み込み中の表示
-    return const Center(
-      child: Icon(Icons.autorenew),
+        },
     );
   }
 
@@ -76,12 +85,17 @@ class PasswordWidget {
       case _Action.delete:
         Dialogs.showOkCancel(
             context: context,
-            title: Text('Do you want to delete `${password.title}` ?'),
+            title: Text('May I delete `${password.title}`?'),
             description: const Text('This operation cannot be undone.'),
-            onPressedOk: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const PasswordListPage(title: 'List'))
-            ),
+            onPressedOk: () async {
+              await PasswordService().delete(password.title);
+              Navigator.popUntil(context, (route) => route.isFirst);
+              await Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const PasswordListPage(title: 'List'))
+              );
+            },
         );
         break;
       default:
@@ -96,20 +110,19 @@ class PasswordWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // title
-        Text(password.title, style: Theme.of(context).textTheme.titleLarge),
+        Text(password.title, style: Theme.of(context).textTheme.displaySmall),
         // id
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Id:', style: Theme.of(context).textTheme.subtitle1),
-            SelectableText(password.password, style: Theme.of(context).textTheme.displayMedium,),
+            Text('Id:', style: Theme.of(context).textTheme.titleLarge),
+            SelectableText(password.id, style: Theme.of(context).textTheme.titleLarge,),
             ElevatedButton(
                 child: const Text('copy'),
                 onPressed: () {
-                  Clipboard.setData(ClipboardData(text: password.password));
-                  Dialogs.showOkCancel(
-                      context: context,
-                      description: const Text('ID has been copied to clipboard!'),
+                  Clipboard.setData(ClipboardData(text: password.id));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Copied!'))
                   );
                 },
             )
@@ -117,24 +130,28 @@ class PasswordWidget {
         ),
         // password
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Password:', style: Theme.of(context).textTheme.subtitle1),
-            SelectableText(password.password, style: Theme.of(context).textTheme.displayMedium,),
+            Text('Password:', style: Theme.of(context).textTheme.titleLarge),
+            SelectableText(password.password, style: Theme.of(context).textTheme.titleLarge,),
             ElevatedButton(
                 child: const Text('Copy'),
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: password.password));
-                  Dialogs.showOkCancel(
-                      context: context,
-                      description: const Text('Password has been copied to clipboard!'),
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Copied!'))
                   );
                 },
             ),
           ],
         ),
-        // description
-        SelectableText(password.memo, style: Theme.of(context).textTheme.bodyLarge,),
+        // memo
+        Row(
+          children: [
+            Text('memo:', style: Theme.of(context).textTheme.titleLarge,),
+            SelectableText(password.memo, style: Theme.of(context).textTheme.titleLarge,),
+          ],
+        )
       ],
     );
   }

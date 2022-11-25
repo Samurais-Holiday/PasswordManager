@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'Password Manager',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
+        backgroundColor: Colors.white70
       ),
       home: const AuthenticationPage(title: 'Authenticate', nextPage: PasswordListPage(title: 'List')),
     );

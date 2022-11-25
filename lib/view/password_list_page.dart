@@ -29,10 +29,7 @@ class _PasswordListPageState extends State<PasswordListPage> {
               onChanged: (_) => setState(() {})
           ),
           SingleChildScrollView(
-            child: PasswordWidget.listView(
-              context: context,
-              searchWord: _searchFormController.value.text,
-            ),
+            child: PasswordWidget.listView(context: context, searchWord: _searchFormController.value.text),
           ),
         ],
       ),

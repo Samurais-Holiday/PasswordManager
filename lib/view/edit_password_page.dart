@@ -39,24 +39,31 @@ class EditPasswordPageState extends State<EditPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Forms.passwordFormField(
-              titleController: _titleController,
-              idController: _idController,
-              passwordController: _passwordController,
-              memoController: _memoController
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _cancelButton(),
-              _inputCompletedButton(),
-            ],
-          )
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Forms.passwordFormField(
+                titleController: _titleController,
+                idController: _idController,
+                passwordController: _passwordController,
+                memoController: _memoController
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _cancelButton(),
+                _inputCompletedButton(),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -83,6 +90,7 @@ class EditPasswordPageState extends State<EditPasswordPage> {
             memo: _memoController.value.text
         );
         await PasswordService().update(oldTitle: widget.editPassword.title, newPassword: newPassword);
+        Navigator.popUntil(context, (route) => route.isFirst);
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const PasswordListPage(title: 'List'))

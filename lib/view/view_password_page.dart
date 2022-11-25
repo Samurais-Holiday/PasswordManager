@@ -21,8 +21,10 @@ class ViewPasswordPageState extends State<ViewPasswordPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
+          actions: [
+            PasswordWidget.moreActionButton(context: context, password: widget.password),
+          ],
         ),
-        endDrawer: PasswordWidget.moreActionButton(context: context, password: widget.password),
         body: SingleChildScrollView(
           child: PasswordWidget.view(context: context, password: widget.password),
         ),

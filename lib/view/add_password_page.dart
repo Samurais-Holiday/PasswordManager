@@ -81,6 +81,7 @@ class AddPasswordPageState extends State<AddPasswordPage> {
             description: Text('`${newPassword.title}` is already registered.\nDo you want to overwrite it?'),
             onPressedOk: () async {
               await _service.add(newPassword);
+              Navigator.popUntil(context, (route) => route.isFirst);
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (_) => const PasswordListPage(title: 'List'))
@@ -89,6 +90,7 @@ class AddPasswordPageState extends State<AddPasswordPage> {
           );
         } else {
           await _service.add(newPassword);
+          Navigator.popUntil(context, (route) => route.isFirst);
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => const PasswordListPage(title: 'List'))

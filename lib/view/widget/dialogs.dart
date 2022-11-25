@@ -42,12 +42,12 @@ class Dialogs {
           title: title,
           content: SingleChildScrollView(child: description),
           actions: [
-            if (onPressedCancel != null)
+            if (onPressedOk != null)
               TextButton(
                 child: const Text('Cancel'),
                 onPressed: () {
                   Navigator.pop(context);
-                  onPressedCancel();
+                  onPressedCancel?.call();
                 },
               ),
             TextButton(
