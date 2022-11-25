@@ -27,6 +27,9 @@ class LocalStoragePasswordRepository implements PasswordRepository {
 
   /// エスケープする
   static String _escape(final String src) {
+    if (src.isEmpty) {
+      return _emptyChar;
+    }
     final escapedEscapeText = src.replaceAll(_escapeChar, _escapeChar * 2);
     return escapedEscapeText.replaceAll(_splitChar, _escapeChar + _splitChar)
         .replaceAll(_emptyChar, _escapeChar + _emptyChar);
@@ -51,18 +54,9 @@ class LocalStoragePasswordRepository implements PasswordRepository {
     final List<PasswordInfo> passwords = [];
     final Map<String, String> all = await _storage.readAll();
     all.forEach((key, value) {
-      final List<String> escapedValues = value.split(_splitPattern);
-      if (escapedValues.length == _ValueType.values.length) {
-        passwords.add(
-            PasswordInfo(
-              title: key,
-              id: _unescape(escapedValues[_ValueType.id.index]),
-              password: _unescape(escapedValues[_ValueType.password.index]),
-              memo: escapedValues[_ValueType.memo.index] == _emptyChar ? '' : _unescape(escapedValues[_ValueType.memo.index]),
-            )
-        );
-      } else {
-        Logger.error('Split is Failed (size=${escapedValues.length}, expected=${_ValueType.values.length}).');
+      final password = _storedTextToPasswordInfo(key: key, value: value);
+      if (password != null) {
+        passwords.add(password);
       }
     });
     return passwords;
@@ -76,17 +70,7 @@ class LocalStoragePasswordRepository implements PasswordRepository {
       Logger.info('`$title` is not Found.');
       return null;
     }
-    List<String> escapedValues = value.split(_splitPattern);
-    if (escapedValues.length != _ValueType.values.length) {
-      Logger.error('Split is Failed (size=${escapedValues.length}, expected=${_ValueType.values.length}).');
-      return null;
-    }
-    return PasswordInfo(
-        title: title,
-        id: _unescape(escapedValues[_ValueType.id.index]),
-        password: _unescape(escapedValues[_ValueType.password.index]),
-        memo: escapedValues[_ValueType.memo.index] == _emptyChar ? '' : _unescape(escapedValues[_ValueType.memo.index])
-    );
+    return _storedTextToPasswordInfo(key: title, value: value);
   }
 
   @override
@@ -95,9 +79,7 @@ class LocalStoragePasswordRepository implements PasswordRepository {
   Future add(final PasswordInfo password)
       => _storage.write(
         key: password.title,
-        value: _escape(password.id)
-            + _splitChar + _escape(password.password)
-            + _splitChar + (password.memo.isEmpty ? _emptyChar : _escape(password.memo)),
+        value: _passwordInfoToStoredText(password),
       );
 
   @override
@@ -112,4 +94,25 @@ class LocalStoragePasswordRepository implements PasswordRepository {
   @override
   /// パスワード削除
   Future delete({required String title}) => _storage.delete(key: title);
+
+  /// 保存されたテキストからPasswordInfoインスタンス生成
+  PasswordInfo? _storedTextToPasswordInfo({required String key, required String value}) {
+    final List<String> escapedValues = value.split(_splitPattern);
+    if (escapedValues.length != _ValueType.values.length) {
+      Logger.error('Split is Failed (actual=${escapedValues.length}, expected=${_ValueType.values.length}).');
+      return null;
+    }
+    return PasswordInfo(
+        title: key,
+        id: escapedValues[_ValueType.id.index] == _emptyChar ? '' : _unescape(escapedValues[_ValueType.id.index]),
+        password: escapedValues[_ValueType.password.index] == _emptyChar ? '' : _unescape(escapedValues[_ValueType.password.index]),
+        memo: escapedValues[_ValueType.memo.index] == _emptyChar ? '' : _unescape(escapedValues[_ValueType.memo.index])
+    );
+  }
+
+  /// パスワード情報から保存するテキストを生成
+  String _passwordInfoToStoredText(PasswordInfo password)
+    => _escape(password.id)
+        + _splitChar + _escape(password.password)
+        + _splitChar + _escape(password.memo);
 }

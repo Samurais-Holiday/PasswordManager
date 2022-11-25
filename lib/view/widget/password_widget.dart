@@ -138,7 +138,7 @@ class PasswordWidget {
       icon: const Icon(Icons.add),
       label: const Text('Add'),
       onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const AddPasswordPage(title: 'Registration')));
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const AddPasswordPage(title: 'Add')));
       },
     );
   }

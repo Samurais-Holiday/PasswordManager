@@ -10,13 +10,13 @@ import '../../test_utility/test_utilities.dart';
 void main() {
   final passwords = <PasswordInfo>[
     PasswordInfo(title: 'Title1', id: 'id1', password: 'password1', memo: 'memo1'),
-    PasswordInfo(title: 'Title2', id: 'id2', password: 'password2', memo: ''),
+    PasswordInfo(title: 'Title2', id: '', password: '', memo: ''),
     PasswordInfo(title: 'Title3', id: '&&//', password: '&/&/', memo: '%'),
     PasswordInfo(title: 'Title4', id: '%&', password: '//%%', memo: '/'),
   ];
   final storageValues = <String, String>{
     'Title1' : r'id1/password1/memo1',
-    'Title2' : r'id2/password2/%',      // memoが空
+    'Title2' : r'%/%/%',                // id, password, memoが空
     'Title3' : r'&&&&&/&//&&&/&&&//&%', // id='&&//', password='&/&/', memo='%'
     'Title4' : r'&%&&/&/&/&%&%/&/',     // id='%&'  , password='//%%', memo='/'
   };
