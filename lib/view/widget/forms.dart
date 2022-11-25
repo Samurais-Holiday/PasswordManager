@@ -62,11 +62,6 @@ class Forms {
                     labelText: 'Login ID *',
                     border: OutlineInputBorder()
                   ),
-                  validator: (input) {
-                    return input == null || input.isEmpty
-                        ? '`Login ID` is required.'
-                        : null;
-                  },
                 ),
                 trailing: readOnly
                     ? IconButton(
@@ -93,11 +88,6 @@ class Forms {
                     labelText: 'Password *',
                     border: OutlineInputBorder()
                   ),
-                  validator: (input) {
-                    return input == null || input.isEmpty
-                        ? '`Password` is required.'
-                        : null;
-                  },
                 ),
                 trailing: readOnly
                     ? IconButton(

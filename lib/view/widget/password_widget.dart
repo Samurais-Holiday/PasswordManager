@@ -85,7 +85,7 @@ class PasswordWidget {
       case _Action.delete:
         Dialogs.showOkCancel(
             context: context,
-            title: Text('May I delete `${password.title}`?'),
+            title: Text('Delete `${password.title}` ?'),
             description: const Text('This operation cannot be undone.'),
             onPressedOk: () async {
               await PasswordService().delete(password.title);
