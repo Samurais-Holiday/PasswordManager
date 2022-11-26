@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:password_manager/api/url/url_launcher.dart';
 import 'package:password_manager/service/password_service.dart';
 import 'package:password_manager/view/widget/forms.dart';
 import 'package:password_manager/view/widget/password_widget.dart';
@@ -19,8 +20,8 @@ class _PasswordListPageState extends State<PasswordListPage> {
 
   @override
   Widget build(BuildContext context) {
-    // 読み込み完了時の表示
     return Scaffold(
+      drawer: _drawer(),
       appBar: AppBar(
         title: Text(widget.title),
       ),
@@ -38,6 +39,24 @@ class _PasswordListPageState extends State<PasswordListPage> {
         ],
       ),
       floatingActionButton: PasswordWidget.addPasswordInfoButton(context: context),
+    );
+  }
+
+  /// ドロワー
+  Widget _drawer() {
+    return Drawer(
+      child: ListView(
+        children: [
+          ListTile(
+              leading: const Icon(Icons.privacy_tip),
+              title: const Text('Privacy Policy'),
+              onTap: () {
+                Navigator.pop(context);
+                UrlLauncher.launchPrivacyPolicy();
+              }
+          ),
+        ],
+      ),
     );
   }
 }

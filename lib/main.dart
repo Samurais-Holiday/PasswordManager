@@ -29,6 +29,9 @@ class MyApp extends StatelessWidget {
           color: primarySwatchThemeData.primaryColorLight,
         ),
         dialogBackgroundColor: primarySwatchThemeData.primaryColorLight,
+        drawerTheme: DrawerThemeData(
+          backgroundColor: primarySwatchThemeData.primaryColorLight
+        ),
       ),
       home: const AuthenticationPage(title: 'Authenticate', nextPage: PasswordListPage(title: 'List')),
     );
