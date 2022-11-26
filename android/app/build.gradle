@@ -74,6 +74,12 @@ android {
         }
     }
 
+    bundle {
+        storeArchive {
+            enable = false
+        }
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release
