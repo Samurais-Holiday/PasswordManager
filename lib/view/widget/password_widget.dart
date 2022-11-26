@@ -18,11 +18,11 @@ enum _Action {
 
 /// パスワード一覧を表示するWidgetを返却するクラス
 class PasswordWidget {
-  /// 読み込み完了後、パスワード一覧を表示するWidgetを返却
-  static Widget futureListView({required BuildContext context, final String searchWord = ''}) {
-    return FutureBuilder(
-        future: PasswordService().search(searchWord),
-        builder: (BuildContext context, AsyncSnapshot<List<PasswordInfo>> snapshot) {
+  /// パスワード情報取得後、パスワード一覧を表示するWidgetを返却
+  static Widget futureListView({required Future<List<PasswordInfo>> passwords}) {
+    return FutureBuilder<List<PasswordInfo>>(
+        future: passwords,
+        builder: (_, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
                 shrinkWrap: true,

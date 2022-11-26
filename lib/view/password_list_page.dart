@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:password_manager/service/password_service.dart';
 import 'package:password_manager/view/widget/forms.dart';
 import 'package:password_manager/view/widget/password_widget.dart';
 
@@ -14,6 +15,7 @@ class PasswordListPage extends StatefulWidget {
 
 class _PasswordListPageState extends State<PasswordListPage> {
   final TextEditingController _searchFormController = TextEditingController();
+  var _passwords = PasswordService().findAll();
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +28,12 @@ class _PasswordListPageState extends State<PasswordListPage> {
         children: [
           Forms.searchForm(
               controller: _searchFormController,
-              onChanged: (_) => setState(() {})
+              onChanged: (_) => setState(() {
+                _passwords = PasswordService().search(_searchFormController.value.text);
+              }),
           ),
           Flexible(
-            child: PasswordWidget.futureListView(
-                context: context,
-                searchWord: _searchFormController.value.text
-            ),
+            child: PasswordWidget.futureListView(passwords: _passwords),
           ),
         ],
       ),
