@@ -5,13 +5,17 @@ import 'package:flutter/services.dart';
 class Forms {
   /// 検索フォーム
   static Widget searchForm({required TextEditingController controller, Function(String)? onChanged}) {
-    return TextField(
-      controller: controller,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        icon: Icon(Icons.search),
+    return Card(
+      child: ListTile(
+        title: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            icon: Icon(Icons.search),
+            border: OutlineInputBorder(),
+          ),
+          onChanged: onChanged,
+        ),
       ),
-      onChanged: onChanged,
     );
   }
 
@@ -27,6 +31,7 @@ class Forms {
         key: key,
         child: ListView(
           shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             // Title
             Card(
@@ -59,7 +64,7 @@ class Forms {
                   readOnly: readOnly,
                   maxLines: null,
                   decoration: const InputDecoration(
-                    labelText: 'Login ID *',
+                    labelText: 'Login ID',
                     border: OutlineInputBorder()
                   ),
                 ),
@@ -85,7 +90,7 @@ class Forms {
                   readOnly: readOnly,
                   maxLines: null,
                   decoration: const InputDecoration(
-                    labelText: 'Password *',
+                    labelText: 'Password',
                     border: OutlineInputBorder()
                   ),
                 ),

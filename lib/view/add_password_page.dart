@@ -83,7 +83,8 @@ class AddPasswordPageState extends State<AddPasswordPage> {
           // 上書きの警告を表示
           Dialogs.showOkCancel(
             context: context,
-            description: Text('`${newPassword.title}` is already registered.\nDo you want to overwrite it?'),
+            title: Text('Overwrite `${newPassword.title}` ?'),
+            description: Text('`${newPassword.title}` is already exists.'),
             onPressedOk: () async {
               await _service.add(newPassword);
               Navigator.popUntil(context, (route) => route.isFirst);
