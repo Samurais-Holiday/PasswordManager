@@ -18,13 +18,10 @@ enum _Action {
 
 /// パスワード一覧を表示するWidgetを返却するクラス
 class PasswordWidget {
-  static Future<List<PasswordInfo>> _passwords = PasswordService().findAll();
-
-  /// パスワード一覧を表示するWidgetを返却
-  static Widget listView({required BuildContext context, final String searchWord = ''}) {
-    _passwords = PasswordService().search(searchWord);
+  /// 読み込み完了後、パスワード一覧を表示するWidgetを返却
+  static Widget futureListView({required BuildContext context, final String searchWord = ''}) {
     return FutureBuilder(
-        future: _passwords,
+        future: PasswordService().search(searchWord),
         builder: (BuildContext context, AsyncSnapshot<List<PasswordInfo>> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
@@ -110,9 +107,9 @@ class PasswordWidget {
         context: context,
         readOnly: true,
         titleController: TextEditingController(text: password.title),
-        idController: TextEditingController(text: password.id),
-        passwordController: TextEditingController(text: password.password),
-        memoController: TextEditingController(text: password.memo));
+        idController: TextEditingController(text: password.id.isEmpty ? ' ' : password.id),
+        passwordController: TextEditingController(text: password.password.isEmpty ? ' ' : password.password),
+        memoController: TextEditingController(text: password.memo.isEmpty ? ' ' : password.memo));
 
   /// パスワードに関する操作を提供するドロップダウンボタン
   static Widget moreActionButton({required BuildContext context, required final PasswordInfo password}) {
